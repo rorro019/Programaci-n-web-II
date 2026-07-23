@@ -18,60 +18,70 @@
 
     <table class="table table-bordered table-hover">
 
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Placa</th>
-                <th>Año</th>
-                <th>Color</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+    <thead class="table-dark">
+        <tr>
+            <th>Cliente</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Placa</th>
+            <th>Año</th>
+            <th>Color</th>
+            <th>Fecha de Registro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-        <tbody>
+    <tbody>
 
-            @foreach($vehiculos as $vehiculo)
+        @forelse($vehiculos as $vehiculo)
 
-            <tr>
+        <tr>
+            <td>{{ $vehiculo->cliente->nombre }} {{ $vehiculo->cliente->apellido }}</td>
+            <td>{{ $vehiculo->marca }}</td>
+            <td>{{ $vehiculo->modelo }}</td>
+            <td>{{ $vehiculo->placa }}</td>
+            <td>{{ $vehiculo->anio }}</td>
+            <td>{{ $vehiculo->color }}</td>
+            <td>{{ $vehiculo->created_at->format('d/m/Y') }}</td>
 
-                <td>{{ $vehiculo->id }}</td>
-                <td>{{ $vehiculo->marca }}</td>
-                <td>{{ $vehiculo->modelo }}</td>
-                <td>{{ $vehiculo->placa }}</td>
-                <td>{{ $vehiculo->año }}</td>
-                <td>{{ $vehiculo->color }}</td>
+            <td>
 
-                <td>
+                <a href="{{ route('vehiculos.edit',$vehiculo) }}" class="btn btn-warning btn-sm">
+                    Editar
+                </a>
 
-                    <a href="{{ route('vehiculos.edit',$vehiculo) }}" class="btn btn-warning btn-sm">
-                        Editar
-                    </a>
+                @if(Auth::user()->isAdmin())
+                <form action="{{ route('vehiculos.destroy',$vehiculo) }}" method="POST" class="d-inline">
 
-                    <form action="{{ route('vehiculos.destroy',$vehiculo) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
 
-                        @csrf
-                        @method('DELETE')
+                    <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Eliminar vehículo?')">
 
-                        <button class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Eliminar vehículo?')">
+                        Eliminar
 
-                            Eliminar
+                    </button>
+                
+                </form>
+                @endif
 
-                        </button>
+            </td>
 
-                    </form>
+        </tr>
 
-                </td>
+        @empty
 
-            </tr>
+        <tr>
+            <td colspan="8" class="text-center">No hay vehículos registrados.</td>
+        </tr>
 
-            @endforeach
+        @endforelse
 
-        </tbody>
+    </tbody>
 
-    </table>
+</table>
+
 
 </div>
 

@@ -1,99 +1,73 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Clientes
-        </h2>
-    </x-slot>
+@section('content')
 
+<div class="container">
 
-    <div class="py-12">
+    <h2 class="mb-3">Lista de Clientes</h2>
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <a href="{{ route('clientes.create') }}" class="btn btn-primary mb-3">
+        Nuevo Cliente
+    </a>
 
-            <div class="bg-white p-6 shadow-sm rounded-lg">
+    <table class="table table-bordered table-hover">
 
-                <h3>
-                    Lista de Clientes
-                </h3>
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Fecha de Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
+        <tbody>
 
-                <br>
+            @forelse($clientes as $cliente)
 
+            <tr>
+                <td>{{ $cliente->nombre }}</td>
+                <td>{{ $cliente->apellido }}</td>
+                <td>{{ $cliente->telefono }}</td>
+                <td>{{ $cliente->email }}</td>
+                <td>{{ $cliente->direccion }}</td>
+                <td>{{ $cliente->created_at->format('d/m/Y') }}</td>
+                <td>
 
-                <a href="{{ route('clientes.create') }}">
-                    Nuevo Cliente
-                </a>
+                    <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm">
+                        Editar
+                    </a>
 
+                    @if(Auth::user()->isAdmin())
+                    <form action="{{ route('clientes.destroy', $cliente) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
 
-                <br><br>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Eliminar cliente?')">
+                            Eliminar
+                        </button>
+                    </form>
+                    @endif
 
+                </td>
+            </tr>
 
-                <table border="1" cellpadding="10" width="100%">
+            @empty
 
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Teléfono</th>
-                            <th>Email</th>
-                            <th>Dirección</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
+            <tr>
+                <td colspan="6" class="text-center">No hay clientes registrados.</td>
+            </tr>
 
+            @endforelse
 
-                    <tbody>
+        </tbody>
 
-                        @foreach($clientes as $cliente)
+    </table>
 
-                            <tr>
+</div>
 
-                                <td>{{ $cliente->nombre }}</td>
-
-                                <td>{{ $cliente->apellido }}</td>
-
-                                <td>{{ $cliente->telefono }}</td>
-
-                                <td>{{ $cliente->email }}</td>
-
-                                <td>{{ $cliente->direccion }}</td>
-                                <td>
-
-                                <a href="{{ route('clientes.edit', $cliente->id) }}">
-                                    Editar
-                                </a>
-
-
-                                <form action="{{ route('clientes.destroy', $cliente->id) }}" 
-                                    method="POST" 
-                                    style="display:inline">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit">
-                                        Eliminar
-                                    </button>
-
-                                </form>
-
-                            </td>
-
-                                                        </tr>
-
-                        @endforeach
-
-                    </tbody>
-
-                </table>
-
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-</x-app-layout>
+@endsection

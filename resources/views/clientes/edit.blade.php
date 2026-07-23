@@ -1,73 +1,60 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <x-slot name="header">
-        <h2>
-            Editar Cliente
-        </h2>
-    </x-slot>
+@section('content')
 
+<div class="container">
 
-    <div>
+    <h2 class="mb-3">Editar Cliente</h2>
 
-        <form action="{{ route('clientes.update', $cliente->id) }}" method="POST">
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-            @csrf
-            @method('PUT')
+    <form action="{{ route('clientes.update', $cliente) }}" method="POST">
+        @csrf
+        @method('PUT')
 
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" name="nombre" id="nombre" class="form-control"
+                value="{{ old('nombre', $cliente->nombre) }}">
+        </div>
 
-            <label>Nombre</label>
-            <input type="text" 
-                   name="nombre" 
-                   value="{{ $cliente->nombre }}">
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" name="apellido" id="apellido" class="form-control"
+                value="{{ old('apellido', $cliente->apellido) }}">
+        </div>
 
+        <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" name="telefono" id="telefono" class="form-control"
+                value="{{ old('telefono', $cliente->telefono) }}">
+        </div>
 
-            <br>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control"
+                value="{{ old('email', $cliente->email) }}">
+        </div>
 
+        <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" name="direccion" id="direccion" class="form-control"
+                value="{{ old('direccion', $cliente->direccion) }}">
+        </div>
 
-            <label>Apellido</label>
-            <input type="text" 
-                   name="apellido" 
-                   value="{{ $cliente->apellido }}">
+        <button type="submit" class="btn btn-primary">Actualizar Cliente</button>
+        <a href="{{ route('clientes.index') }}" class="btn btn-secondary">Cancelar</a>
 
+    </form>
 
-            <br>
+</div>
 
-
-            <label>Teléfono</label>
-            <input type="text" 
-                   name="telefono" 
-                   value="{{ $cliente->telefono }}">
-
-
-            <br>
-
-
-            <label>Email</label>
-            <input type="email" 
-                   name="email" 
-                   value="{{ $cliente->email }}">
-
-
-            <br>
-
-
-            <label>Dirección</label>
-            <input type="text" 
-                   name="direccion" 
-                   value="{{ $cliente->direccion }}">
-
-
-            <br><br>
-
-
-            <button type="submit">
-                Actualizar Cliente
-            </button>
-
-
-        </form>
-
-    </div>
-
-
-</x-app-layout>
+@endsection

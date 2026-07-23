@@ -1,61 +1,173 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('content')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+<style>
+    body {
+        background-image: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1600&q=80');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'Figtree', sans-serif;
+    }
+
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        width: 400px;
+        background-color: rgba(0, 0, 0, 0.55) !important;
+        border-radius: .5rem;
+        border: none;
+    }
+
+    .login-card .card-header {
+        background: transparent;
+        border-bottom: none;
+        position: relative;
+        padding-top: 1.5rem;
+    }
+
+    .login-card .card-header h3 {
+        color: white;
+        font-weight: 700;
+    }
+
+    .login-card .input-group-text {
+        width: 50px;
+        justify-content: center;
+        background-color: #FFC312;
+        color: black;
+        border: 0;
+    }
+
+    .login-card input:focus {
+        outline: 0 !important;
+        box-shadow: 0 0 0 0 !important;
+    }
+
+    .login-card .remember-text {
+        color: white;
+    }
+
+    .login-card .remember-text input {
+        width: 18px;
+        height: 18px;
+        margin-right: 6px;
+    }
+
+    .login-btn {
+        color: black;
+        background-color: #FFC312;
+        border: none;
+        width: 100px;
+    }
+
+    .login-btn:hover {
+        color: black;
+        background-color: white;
+    }
+
+    .login-card .links {
+        color: white;
+    }
+
+    .login-card .links a {
+        margin-left: 4px;
+        color: #FFC312;
+    }
+
+    .login-card .links a:hover {
+        color: white;
+    }
+
+    .alert-inside {
+        margin: 0 1.25rem 1rem 1.25rem;
+    }
+</style>
+
+<div class="login-wrapper">
+
+    <div class="card login-card">
+
+        <div class="card-header text-center">
+            <h3>Iniciar Sesión</h3>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-between mt-4">
-
-    @if (Route::has('register'))
-        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            href="{{ route('register') }}">
-            {{ __('Create an account') }}
-        </a>
-    @endif
-
-    <div class="flex items-center">
-
-        @if (Route::has('password.request'))
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md me-4"
-                href="{{ route('password.request') }}">
-                {{ __('Forgot your password?') }}
-            </a>
+        @if (session('status'))
+            <div class="alert alert-success alert-inside">
+                {{ session('status') }}
+            </div>
         @endif
 
-        <x-primary-button>
-            {{ __('Log in') }}
-        </x-primary-button>
+        @if ($errors->any())
+            <div class="alert alert-danger alert-inside">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <div class="card-body">
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input type="email" name="email" class="form-control"
+                        placeholder="Email" value="{{ old('email') }}"
+                        required autofocus autocomplete="username">
+                </div>
+
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input type="password" name="password" class="form-control"
+                        placeholder="Contraseña" required autocomplete="current-password">
+                </div>
+
+                <div class="row align-items-center remember-text mx-0 mb-3">
+                    <input type="checkbox" id="remember_me" name="remember">
+                    <label for="remember_me" class="mb-0">Recordarme</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn login-btn float-end">
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card-footer bg-transparent border-0 pb-4">
+
+            @if (Route::has('register'))
+                <div class="d-flex justify-content-center links">
+                    ¿No tienes cuenta?
+                    <a href="{{ route('register') }}">Regístrate</a>
+                </div>
+            @endif
+
+            @if (Route::has('password.request'))
+                <div class="d-flex justify-content-center links">
+                    <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                </div>
+            @endif
+
+        </div>
 
     </div>
 
 </div>
-    </form>
-</x-guest-layout>
+
+@endsection

@@ -14,8 +14,7 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-    return view('clientes.index', compact('clientes'));
-
+        return view('clientes.index', compact('clientes'));
     }
 
     /**
@@ -31,15 +30,18 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-         Cliente::create([
-        'nombre' => $request->nombre,
-        'apellido' => $request->apellido,
-        'telefono' => $request->telefono,
-        'email' => $request->email,
-        'direccion' => $request->direccion,
-    ]);
-    return redirect()->route('clientes.index');
-    
+        $datos = $request->validate([
+            'nombre' => 'required|max:100',
+            'apellido' => 'required|max:100',
+            'telefono' => 'required|max:20',
+            'email' => 'required|email|unique:clientes',
+            'direccion' => 'required|max:255',
+        ]);
+
+        Cliente::create($datos);
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente registrado correctamente.');
     }
 
     /**
@@ -63,15 +65,18 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-         $cliente->update([
-        'nombre' => $request->nombre,
-        'apellido' => $request->apellido,
-        'telefono' => $request->telefono,
-        'email' => $request->email,
-        'direccion' => $request->direccion,
-    ]);
+        $datos = $request->validate([
+            'nombre' => 'required|max:100',
+            'apellido' => 'required|max:100',
+            'telefono' => 'required|max:20',
+            'email' => 'required|email|unique:clientes,email,' . $cliente->id,
+            'direccion' => 'required|max:255',
+        ]);
 
-    return redirect()->route('clientes.index');
+        $cliente->update($datos);
+
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente actualizado correctamente.');
     }
 
     /**
@@ -81,6 +86,7 @@ class ClienteController extends Controller
     {
         $cliente->delete();
 
-    return redirect()->route('clientes.index');
+        return redirect()->route('clientes.index')
+            ->with('success', 'Cliente eliminado correctamente.');
     }
 }

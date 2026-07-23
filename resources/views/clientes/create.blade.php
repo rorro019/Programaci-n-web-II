@@ -1,65 +1,59 @@
-<x-app-layout>
+@extends('layouts.app')
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Registrar Cliente
-        </h2>
-    </x-slot>
+@section('content')
 
+<div class="container">
 
-    <div class="py-12">
+    <h2 class="mb-3">Registrar Cliente</h2>
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-            <div class="bg-white p-6 shadow-sm rounded-lg">
+    <form action="{{ route('clientes.store') }}" method="POST">
+        @csrf
 
-                <form action="{{ route('clientes.store') }}" method="POST">
-
-                    @csrf
-
-                    <div>
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" class="border rounded w-full">
-                    </div>
-
-
-                    <div>
-                        <label>Apellido</label>
-                        <input type="text" name="apellido" class="border rounded w-full">
-                    </div>
-
-
-                    <div>
-                        <label>Teléfono</label>
-                        <input type="text" name="telefono" class="border rounded w-full">
-                    </div>
-
-
-                    <div>
-                        <label>Email</label>
-                        <input type="email" name="email" class="border rounded w-full">
-                    </div>
-
-
-                    <div>
-                        <label>Dirección</label>
-                        <input type="text" name="direccion" class="border rounded w-full">
-                    </div>
-
-
-                    <br>
-
-                    <button type="submit"
-                     style="background-color: #09ad3a; color: white; padding: 10px 20px; border-radius: 5px;">
-                     Guardar Cliente
-                    </button>
-
-                </form>
-
-            </div>
-
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" name="nombre" id="nombre" class="form-control"
+                value="{{ old('nombre') }}">
         </div>
 
-    </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" name="apellido" id="apellido" class="form-control"
+                value="{{ old('apellido') }}">
+        </div>
 
-</x-app-layout>
+        <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" name="telefono" id="telefono" class="form-control"
+                value="{{ old('telefono') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control"
+                value="{{ old('email') }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" name="direccion" id="direccion" class="form-control"
+                value="{{ old('direccion') }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+        <a href="{{ route('clientes.index') }}" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+
+</div>
+
+@endsection

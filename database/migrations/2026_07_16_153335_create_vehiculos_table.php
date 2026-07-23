@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('marca');
         $table->string('modelo');
         $table->string('placa')->unique();
-        $table->integer('año');
+        $table->integer('anio');
         $table->string('color');
 
         $table->timestamps();

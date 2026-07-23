@@ -12,7 +12,18 @@ class Vehiculo extends Model
         'marca',
         'modelo',
         'placa',
-        'año',
+        'anio',
         'color',
+        'cliente_id',
     ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
+
+    public function servicios()
+    {
+        return $this->hasMany(Servicio::class);
+    }
 }

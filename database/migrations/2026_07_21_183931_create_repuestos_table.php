@@ -8,18 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('servicios', function (Blueprint $table) {
+        Schema::create('repuestos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 150);
-            $table->text('descripcion')->nullable();
-            $table->foreignId('vehiculo_id')->constrained('vehiculos')->onDelete('cascade');
+            $table->integer('stock')->default(0);
             $table->decimal('precio', 8, 2);
+            $table->string('proveedor', 150)->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('servicios');
+        Schema::dropIfExists('repuestos');
     }
 };
